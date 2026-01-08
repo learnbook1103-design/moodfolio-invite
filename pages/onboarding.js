@@ -476,14 +476,32 @@ export default function Onboarding() {
             <MoodEffectLayer mood={['#차분한']} />
 
             <div className="min-h-screen relative z-[99999] flex flex-col items-center justify-center p-8">
+                {/* 상단 네비게이션 */}
+                <div className="absolute top-8 right-8 flex gap-3">
+                    <button
+                        onClick={() => router.push('/home')}
+                        className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-gray-600 text-gray-700 rounded-lg hover:bg-white/20 transition font-medium"
+                    >
+                        홈으로
+                    </button>
+                    {!user && (
+                        <button
+                            onClick={() => router.push('/login')}
+                            className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-gray-600 text-gray-700 rounded-lg hover:bg-white/20 transition font-medium"
+                        >
+                            로그인
+                        </button>
+                    )}
+                </div>
+
                 {/* 헤더 */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-5xl font-bold text-white mb-4">포트폴리오 만들기</h1>
-                    <p className="text-gray-400 text-lg">어떤 방법으로 시작하시겠어요?</p>
+                    <h1 className="text-5xl font-bold text-gray-800 mb-4">포트폴리오 만들기</h1>
+                    <p className="text-gray-700 text-lg">어떤 방법으로 시작하시겠어요?</p>
                 </motion.div>
 
                 {/* 선택 카드 */}
@@ -501,7 +519,7 @@ export default function Onboarding() {
                             <div className="text-6xl mb-4"></div>
                             <h2 className="text-3xl font-bold text-white mb-2">이력서 업로드</h2>
                             <p className="text-emerald-400 font-bold mb-4">가장 빠른 방법!</p>
-                            <p className="text-gray-400 mb-6 flex-grow">
+                            <p className="text-gray-200 mb-6 flex-grow">
                                 이력서 파일을 업로드하면 AI가 자동으로 분석하여<br />
                                 3분 안에 포트폴리오를 완성할 수 있습니다.
                             </p>
@@ -581,7 +599,7 @@ export default function Onboarding() {
                                                 className="hidden"
                                             />
                                         </label>
-                                        <p className="text-gray-500 text-sm mt-3">DOCX, PDF, TXT 지원</p>
+                                        <p className="text-gray-300 text-sm mt-3">DOCX, PDF, TXT 지원</p>
                                         <div className="mt-4 pt-4 border-t border-white/10">
                                             <button
                                                 onClick={() => setPasteMode(true)}
@@ -609,7 +627,7 @@ export default function Onboarding() {
                             <div className="text-6xl mb-4"></div>
                             <h2 className="text-3xl font-bold text-white mb-2">직접 작성</h2>
                             <p className="text-blue-400 font-bold mb-4">차근차근 입력하기</p>
-                            <p className="text-gray-400 mb-6 flex-grow">
+                            <p className="text-gray-200 mb-6 flex-grow">
                                 이력서가 없거나 직접 작성하고 싶다면<br />
                                 간단한 설문을 통해 포트폴리오를 만들 수 있습니다.
                             </p>
@@ -622,15 +640,15 @@ export default function Onboarding() {
                             </button>
 
                             <div className="mt-4 space-y-2">
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
+                                <div className="flex items-center gap-2 text-sm text-gray-200">
                                     <span className="text-blue-400"></span>
                                     <span>직무 및 강점 선택</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
+                                <div className="flex items-center gap-2 text-sm text-gray-200">
                                     <span className="text-blue-400"></span>
                                     <span>무드 및 스타일 설정</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-400">
+                                <div className="flex items-center gap-2 text-sm text-gray-200">
                                     <span className="text-blue-400"></span>
                                     <span>프로젝트 상세 입력</span>
                                 </div>
@@ -646,7 +664,7 @@ export default function Onboarding() {
                     transition={{ delay: 0.5 }}
                     className="mt-12 text-center"
                 >
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-700 text-sm">
                         이력서가 있다면 업로드를 추천드려요. 훨씬 빠릅니다!
                     </p>
                 </motion.div>

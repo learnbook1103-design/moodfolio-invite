@@ -73,30 +73,30 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
       id: "skills",
       title: "1. 핵심 역량 및 기술 요약",
       questions: [
-        { keyword: "핵심 요약", text: "지원자의 핵심 역량 3가지를 요약한다면?" },
-        { keyword: "메인 스택", text: "이 포트폴리오에서 가장 주력으로 사용한 '기술 스택(Main Skill)'은 무엇인가요?" },
-        { keyword: "기술 깊이", text: "기술적으로 가장 깊이 있게 파고들거나 연구해 본 분야는 어디인가요?" },
-        { keyword: "문서화", text: "코드 작성 외에 설계 문서(API 명세, 기획서 등)도 작성할 줄 아나요?" }
+        { key: "core_skills", keyword: "핵심 요약", text: "지원자의 핵심 역량 3가지를 요약한다면?" },
+        { key: "main_stack", keyword: "메인 스택", text: "이 포트폴리오에서 가장 주력으로 사용한 '기술 스택(Main Skill)'은 무엇인가요?" },
+        { key: "tech_depth", keyword: "기술 깊이", text: "기술적으로 가장 깊이 있게 파고들거나 연구해 본 분야는 어디인가요?" },
+        { key: "documentation", keyword: "문서화", text: "코드 작성 외에 설계 문서(API 명세, 기획서 등)도 작성할 줄 아나요?" }
       ]
     },
     {
       id: "contribution",
       title: "2. 역할 및 기여도 검증",
       questions: [
-        { keyword: "기여도", text: "각 프로젝트에서의 지원자의 구체적인 역할과 기여도는 어땠나요?" },
-        { keyword: "협업 방식", text: "팀 프로젝트에서 동료들과의 협업(코드 리뷰, 일정 관리)은 어떻게 진행했나요?" },
-        { keyword: "범위 확인", text: "기획부터 배포/운영까지 '전체 사이클'을 경험해 본 프로젝트가 있나요?" },
-        { keyword: "산출물", text: "실제 작성한 소스 코드나 디자인 원본 파일(Figma 등)을 볼 수 있나요?" }
+        { key: "role_contribution", keyword: "기여도", text: "각 프로젝트에서의 지원자의 구체적인 역할과 기여도는 어땠나요?" },
+        { key: "collaboration", keyword: "협업 방식", text: "팀 프로젝트에서 동료들과의 협업(코드 리뷰, 일정 관리)은 어떻게 진행했나요?" },
+        { key: "cycle", keyword: "범위 확인", text: "기획부터 배포/운영까지 '전체 사이클'을 경험해 본 프로젝트가 있나요?" },
+        { key: "artifacts", keyword: "산출물", text: "실제 작성한 소스 코드나 디자인 원본 파일(Figma 등)을 볼 수 있나요?" }
       ]
     },
     {
       id: "achievements",
       title: "3. 문제 해결 및 성과",
       questions: [
-        { keyword: "대표작", text: "포트폴리오 중 가장 자신 있는 프로젝트 하나를 소개한다면?" },
-        { keyword: "트러블슈팅", text: "개발(또는 진행) 중 발생한 가장 치명적인 문제와 해결 과정은 무엇인가요?" },
-        { keyword: "의사결정", text: "해당 기술(또는 디자인 컨셉)을 선정하게 된 특별한 이유나 논리가 있나요?" },
-        { keyword: "정량 성과", text: "프로젝트를 통해 얻은 구체적인 수치 성과(사용자 수, 성능 개선율 등)가 있나요?" }
+        { key: "best_project", keyword: "대표작", text: "포트폴리오 중 가장 자신 있는 프로젝트 하나를 소개한다면?" },
+        { key: "troubleshooting", keyword: "트러블슈팅", text: "개발(또는 진행) 중 발생한 가장 치명적인 문제와 해결 과정은 무엇인가요?" },
+        { key: "decision_making", keyword: "의사결정", text: "해당 기술(또는 디자인 컨셉)을 선정하게 된 특별한 이유나 논리가 있나요?" },
+        { key: "quantitative_performance", keyword: "정량 성과", text: "프로젝트를 통해 얻은 구체적인 수치 성과(사용자 수, 성능 개선율 등)가 있나요?" }
       ]
     }
   ];
@@ -124,6 +124,7 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
       ]);
     }
   }, [isSharedView, portfolioContext?.name]);
+
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
 
@@ -137,13 +138,11 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
   // 자동 스크롤 로직 개선
   useEffect(() => {
     if (isOpen && lastMessageRef.current) {
-      // 신규 메시지가 추가되면 해당 메시지의 시작 부분이 보이도록 스크롤
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [messages, isOpen]);
 
   const handleMouseDown = (e) => {
-    // Allow dragging the character button
     if (!isOpen) {
       setIsDragging(true);
       setDragStart({
@@ -152,8 +151,8 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
         startX: e.clientX,
         startY: e.clientY
       });
-      e.preventDefault(); // Prevent text selection
-      e.stopPropagation(); // Prevent button click
+      e.preventDefault();
+      e.stopPropagation();
     }
   };
 
@@ -168,14 +167,12 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
 
   const handleMouseUp = (e) => {
     if (isDragging) {
-      // Check if it was a click (not a drag)
       const distance = Math.sqrt(
         Math.pow(e.clientX - dragStart.startX, 2) +
         Math.pow(e.clientY - dragStart.startY, 2)
       );
 
       if (distance < 5) {
-        // It was a click, open the chat
         setIsOpen(!isOpen);
       }
     }
@@ -195,12 +192,42 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
 
   const sendMessage = async (textOverride = null) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const msgText = textOverride || input;
 
-    if (!msgText.trim()) return;
+    // 안전하게 문자열로 변환
+    let msgText = textOverride !== null ? textOverride : input;
+
+    // 디버깅: 타입 확인
+    console.log('sendMessage called with:', { textOverride, input, msgText, type: typeof msgText });
+
+    // msgText가 객체인 경우 처리
+    if (msgText && typeof msgText === 'object') {
+      console.warn('msgText is an object, attempting to extract text:', msgText);
+      // 객체에서 text 속성 추출 시도
+      if (msgText.text) {
+        msgText = msgText.text;
+      } else if (msgText.target && msgText.target.value) {
+        // 이벤트 객체인 경우
+        msgText = msgText.target.value;
+      } else {
+        // 안전하게 문자열로 변환 (순환 참조 방지)
+        msgText = String(msgText);
+      }
+    }
+
+    // msgText가 문자열이 아니면 문자열로 변환
+    if (msgText && typeof msgText !== 'string') {
+      msgText = String(msgText);
+    }
+
+    // 빈 문자열 체크
+    if (!msgText || !msgText.trim()) {
+      console.log('Message is empty, returning');
+      return;
+    }
 
     setMessages((prev) => [...prev, { role: "user", text: msgText }]);
-    if (!textOverride) setInput("");
+    // textOverride가 명시적으로 null일 때만 입력창 비우기 (사용자가 직접 입력한 경우)
+    if (textOverride === null) setInput("");
     setIsLoading(true);
 
     try {
@@ -233,10 +260,41 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
       });
     } catch (error) {
       console.error(error);
-      setMessages((prev) => [...prev, { role: "ai", text: "죄송합니다. 서버가 꺼져있는 것 같아요! 😢" }]);
+      setMessages((prev) => [...prev, { role: "ai", text: "죄송합니다. 서버가 꺼져있는 것 같아요!" }]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // [NEW] Direct Retrieval Logic
+  const handleSelection = async (question) => {
+    // 1. Show user message
+    setMessages(prev => [...prev, { role: "user", text: question.text }]);
+
+    // 2. Check for Verified Answer
+    const verifiedAnswer = userData?.chat_answers?.[question.key];
+
+    if (verifiedAnswer && verifiedAnswer.trim().length > 0) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setMessages(prev => {
+          const updated = [...prev, { role: "ai", text: `지원자가 직접 작성한 답변입니다:\n\n${verifiedAnswer}` }];
+          if (isSharedView) {
+            updated.push({
+              role: "ai",
+              text: "다른 궁금한 점이 있으신가요? 아래 카테고리에서 선택해주시면 더 안내해 드릴게요!",
+              isCategorySelection: true
+            });
+          }
+          return updated;
+        });
+        setIsLoading(false);
+      }, 600);
+      return;
+    }
+
+    // 3. Fallback to AI
+    await sendMessage(question.text);
   };
 
   const handleKeyDown = (e) => {
@@ -248,7 +306,6 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
 
   const [showBubble, setShowBubble] = useState(false);
 
-  // 말풍선 주기적 표시 로직 (5초 표시, 10초 숨김)
   useEffect(() => {
     const toggleBubble = () => {
       setShowBubble(true);
@@ -259,7 +316,6 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
     };
 
     const cleanupInitial = toggleBubble();
-
     const interval = setInterval(() => {
       toggleBubble();
     }, 15000);
@@ -282,7 +338,7 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
           style={{
             transform: `translate(${position.x}px, ${position.y}px)`,
             transition: isDragging ? 'none' : undefined,
-            pointerEvents: 'none' // 말풍선이 드래그를 방해하지 않도록
+            pointerEvents: 'none'
           }}
         >
           <div className="bg-white text-black px-4 py-3 rounded-2xl rounded-br-none shadow-xl border border-gray-200 animate-bounce transition-all max-w-[200px] text-sm font-bold relative">
@@ -300,29 +356,22 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
             boxShadow: '0 0 25px rgba(6,182,212,0.6)',
             position: 'fixed',
-            // Calculate position to keep chat window in viewport
             bottom: (() => {
-              const baseBottom = 24; // Original bottom position
+              const baseBottom = 24;
               const adjustedBottom = baseBottom + position.y;
-              const chatHeight = 550 + 16; // chat height + margin
+              const chatHeight = 550 + 16;
               const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
-
-              // Ensure chat doesn't go off top of screen
               const minBottom = 10;
               const maxBottom = viewportHeight - chatHeight - 10;
-
               return Math.max(minBottom, Math.min(adjustedBottom, maxBottom)) + 'px';
             })(),
             right: (() => {
-              const baseRight = 24; // Original right position
+              const baseRight = 24;
               const adjustedRight = baseRight - position.x;
               const chatWidth = 360;
               const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
-
-              // Ensure chat doesn't go off left of screen
               const minRight = 10;
               const maxRight = viewportWidth - chatWidth - 10;
-
               return Math.max(minRight, Math.min(adjustedRight, maxRight)) + 'px';
             })()
           }}
@@ -335,18 +384,13 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
               </span>
             </div>
             <div>
-
               <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white hover:rotate-90 transition-transform duration-200">✕</button>
             </div>
           </div>
           <div ref={scrollRef} className="flex-1 p-4 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-cyan-900 scrollbar-track-transparent">
             {messages.map((msg, idx) => {
-              // 스크롤 타겟 결정: 
-              // 1. 공유 뷰(무무)에서는 메뉴가 나오기 직전의 '진짜 답변'에 포커스
-              // 2. 그 외에는 단순 하단 포커스
               let isScrollTarget = false;
               if (isSharedView) {
-                // 메시지가 2개 이상이고 마지막이 메뉴라면 그 전 메시지에 포커스
                 if (idx === messages.length - 2 && messages[messages.length - 1].isCategorySelection) {
                   isScrollTarget = true;
                 } else if (idx === messages.length - 1 && !msg.isCategorySelection) {
@@ -394,10 +438,18 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
                         ))}
                         <button
                           onClick={() => {
-                            const contactInfo = userData?.email || "정보 없음";
+                            const email = userData?.email || "정보 없음";
+                            const phone = userData?.phone || null;
+
+                            let contactText = `지원자님께 직접 궁금한 점을 문의해보세요!\n\n**이메일**: ${email}`;
+                            if (phone) {
+                              contactText += `\n**전화번호**: ${phone}`;
+                            }
+                            contactText += `\n\n다른 궁금한 점이 있으시면 언제든 물어보세요!`;
+
                             setMessages(prev => [...prev,
                             { role: "user", text: "지원자 연락처 확인하기" },
-                            { role: "ai", text: `지원자님께 직접 궁금한 점을 문의해보세요!\n\n📧 **이메일**: ${contactInfo}\n\n다른 궁금한 점이 있으시면 언제든 물어보세요!` }
+                            { role: "ai", text: contactText }
                             ]);
                           }}
                           className="text-left p-3 bg-emerald-900/30 hover:bg-emerald-800/50 border border-emerald-500/30 rounded-xl text-xs text-emerald-100 transition-all active:scale-95 flex justify-between items-center group mt-2"
@@ -416,7 +468,7 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
                         {QUESTION_CATEGORIES.find(c => c.id === msg.categoryId)?.questions.map((q, i) => (
                           <button
                             key={i}
-                            onClick={() => sendMessage(q.text)}
+                            onClick={() => handleSelection(q)}
                             className="text-center p-2 bg-white/5 hover:bg-cyan-900/30 border border-white/10 rounded-lg text-xs text-gray-300 transition-all active:scale-95 hover:border-cyan-500/50"
                           >
                             {q.keyword}
@@ -453,7 +505,8 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
             {isLoading && (
               <div className="flex justify-start">
                 <div className="chat-widget-ai-bg border border-gray-700 p-3 rounded-2xl rounded-tl-none chat-widget-text text-xs flex items-center gap-2 animate-pulse">
-                  <span>AI가 생각 중입니다...</span><span className="animate-spin">⏳</span>
+                  <span>AI가 생각 중입니다...</span>
+                  <div className="animate-spin w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full"></div>
                 </div>
               </div>
             )}
@@ -464,7 +517,9 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
               <input className="chat-widget-input-bg flex-1 text-white text-sm rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 transition-all" placeholder="궁금한 점을 입력하세요..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} />
               <button onClick={sendMessage} disabled={isLoading} className="chat-widget-button disabled:opacity-50 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all shadow-lg hover:opacity-90" style={{
                 boxShadow: isLoading ? 'none' : '0 0 20px rgba(6,182,212,0.5)'
-              }}>➤</button>
+              }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
             </div>
           )}
         </div>
@@ -502,3 +557,4 @@ export default function ChatWidget({ customMessage, isSharedView = false, portfo
     </div>
   );
 }
+

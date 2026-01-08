@@ -106,7 +106,7 @@ import { getUserProfile, updateUserProfile, getPortfolios, updatePortfolioFeatur
 import { JOB_SPECS } from '../lib/jobData';
 
 // Force Rebuild Identifier: 2025-12-19-16-16
-export default function ResultPage() {
+export default function ResultPage({ setGlobalUserData }) {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [currentPortfolioName, setCurrentPortfolioName] = useState('');
@@ -518,6 +518,15 @@ export default function ResultPage() {
       audioRef.current.muted = isMuted;
     }
   }, [isMuted]);
+
+  // [SYNC FIX] Sync local userData with global state for Chatbot
+  useEffect(() => {
+    if (userData && setGlobalUserData) {
+      console.log('Syncing userData to global state (ChatWidget)');
+      setGlobalUserData(userData);
+    }
+  }, [userData, setGlobalUserData]);
+
 
   // 🎵 Function to play a specific song URL
   const playSong = (bgmUrl) => {
@@ -1118,6 +1127,13 @@ export default function ResultPage() {
                   className={`absolute right-0 top-full mt-2 w-48 ${theme === 'light' ? 'bg-white border-gray-300' : 'bg-gray-900 border-white/10'} border rounded-xl shadow-2xl overflow-hidden z-[60] backdrop-blur-xl`}
                 >
                   <button
+                    onClick={() => router.push('/home')}
+                    className={`w-full px-4 py-3 text-left ${theme === 'light' ? 'text-gray-900 hover:bg-gray-100 border-gray-200' : 'text-gray-200 hover:bg-white/10 border-white/5'} flex items-center gap-3 transition-colors border-b`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <span>홈</span>
+                  </button>
+                  <button
                     onClick={() => router.push('/mypage')}
                     className={`w-full px-4 py-3 text-left ${theme === 'light' ? 'text-gray-900 hover:bg-gray-100 border-gray-200' : 'text-gray-200 hover:bg-white/10 border-white/5'} flex items-center gap-3 transition-colors border-b`}
                   >
@@ -1554,7 +1570,7 @@ export default function ResultPage() {
                         </p>
                         <div className="flex gap-4 justify-center">
                           <button
-                            onClick={() => router.push('/')}
+                            onClick={() => router.push('/home')}
                             className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition"
                           >
                             홈으로 가기
@@ -1660,7 +1676,7 @@ export default function ResultPage() {
                 나중에 하기
               </button>
               <button
-                onClick={() => router.push('/')}
+                onClick={() => router.push('/home')}
                 className="flex-1 py-3 bg-blue-500/20 border border-blue-500/30 text-blue-300 font-bold rounded-xl hover:bg-blue-500/30 transition flex items-center justify-center gap-2"
               >
                 홈으로 가기

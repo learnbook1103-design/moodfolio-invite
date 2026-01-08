@@ -163,7 +163,7 @@ export default function ImportResumeButton({ onImport }) {
             <>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold hover:bg-emerald-500/20 hover:text-emerald-300 transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 text-xs font-bold hover:bg-emerald-100 hover:text-emerald-700 transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)]"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                     이력서 가져오기
@@ -176,7 +176,7 @@ export default function ImportResumeButton({ onImport }) {
                         <div className="flex justify-end gap-3">
                             <button
                                 onClick={() => { setShowModal(false); setResumeText(''); setUrlInput(''); setExtractedImages([]); }}
-                                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                                className="px-4 py-2 text-stone-500 hover:text-stone-700 transition-colors"
                             >
                                 취소
                             </button>
@@ -194,43 +194,43 @@ export default function ImportResumeButton({ onImport }) {
                     }
                 >
                     <div className="p-1">
-                        <h2 className="text-2xl font-bold text-emerald-400 mb-6 text-center">이력서 가져오기</h2>
+                        <h2 className="text-2xl font-bold text-emerald-600 mb-6 text-center">이력서 가져오기</h2>
 
                         {/* 노션 안내 */}
-                        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
-                            <h3 className="text-sm font-bold text-emerald-400 mb-2">💡 노션 페이지에서 가져오기</h3>
-                            <ol className="text-xs text-gray-300 space-y-1 list-decimal list-inside">
+                        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <h3 className="text-sm font-bold text-emerald-700 mb-2">💡 노션 페이지에서 가져오기</h3>
+                            <ol className="text-xs text-stone-600 space-y-1 list-decimal list-inside">
                                 <li>노션 페이지를 엽니다</li>
-                                <li><code className="px-1 py-0.5 bg-black/30 rounded">Ctrl + A</code> (전체 선택)</li>
-                                <li><code className="px-1 py-0.5 bg-black/30 rounded">Ctrl + C</code> (복사)</li>
+                                <li><code className="px-1 py-0.5 bg-stone-200 text-stone-700 rounded">Ctrl + A</code> (전체 선택)</li>
+                                <li><code className="px-1 py-0.5 bg-stone-200 text-stone-700 rounded">Ctrl + C</code> (복사)</li>
                                 <li>아래 텍스트 영역에 붙여넣기</li>
                             </ol>
-                            <p className="text-xs text-gray-400 mt-2">
+                            <p className="text-xs text-stone-500 mt-2">
                                 ⚡ 이 방법이 가장 빠르고 정확합니다!
                             </p>
                         </div>
 
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="h-px bg-white/10 flex-1"></div>
-                            <span className="text-gray-500 text-xs">또는</span>
-                            <div className="h-px bg-white/10 flex-1"></div>
+                            <div className="h-px bg-stone-200 flex-1"></div>
+                            <span className="text-stone-500 text-xs">또는</span>
+                            <div className="h-px bg-stone-200 flex-1"></div>
                         </div>
 
                         {/* 파일 업로드 */}
                         <div className="mb-6">
-                            <label className="block text-sm font-bold text-gray-300 mb-2">파일 업로드 (DOCX, PDF 지원)</label>
-                            <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-emerald-500/50 hover:bg-white/5 transition-all">
+                            <label className="block text-sm font-bold text-stone-600 mb-2">파일 업로드 (DOCX, PDF 지원)</label>
+                            <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-stone-200 rounded-xl cursor-pointer hover:border-emerald-400 hover:bg-stone-50 transition-all">
                                 <div className="flex flex-col items-center justify-center">
                                     {isProcessing ? (
                                         <>
                                             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-400 mb-2"></div>
-                                            <p className="text-xs text-emerald-400">파일 처리 중...</p>
+                                            <p className="text-xs text-emerald-500">파일 처리 중...</p>
                                         </>
                                     ) : (
                                         <>
-                                            <svg className="w-6 h-6 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                            <p className="text-xs text-gray-400">클릭하여 업로드</p>
-                                            <p className="text-xs text-gray-500 mt-1">💡 PDF는 텍스트만 추출됩니다 (이미지 제외)</p>
+                                            <svg className="w-6 h-6 mb-2 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                            <p className="text-xs text-stone-500">클릭하여 업로드</p>
+                                            <p className="text-xs text-stone-400 mt-1">💡 PDF는 텍스트만 추출됩니다 (이미지 제외)</p>
                                         </>
                                     )}
                                 </div>
@@ -247,16 +247,16 @@ export default function ImportResumeButton({ onImport }) {
                         {/* Image Preview Section */}
                         {extractedImages.length > 0 && (
                             <div className="mb-6">
-                                <label className="block text-sm font-bold text-emerald-400 mb-3">
+                                <label className="block text-sm font-bold text-emerald-600 mb-3">
                                     📷 추출된 이미지 ({extractedImages.length}개)
                                 </label>
-                                <div className="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto p-3 bg-black/20 border border-white/10 rounded-xl">
+                                <div className="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto p-3 bg-stone-50 border border-stone-200 rounded-xl">
                                     {extractedImages.map((img, idx) => (
                                         <div key={idx} className="relative group">
                                             <img
                                                 src={img}
                                                 alt={`Extracted ${idx + 1}`}
-                                                className="w-full h-24 object-cover rounded-lg border border-white/20 hover:border-emerald-500/50 transition-all"
+                                                className="w-full h-24 object-cover rounded-lg border border-stone-200 hover:border-emerald-500/50 transition-all"
                                             />
                                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                                                 <span className="text-white text-xs font-bold">이미지 {idx + 1}</span>
@@ -264,29 +264,29 @@ export default function ImportResumeButton({ onImport }) {
                                         </div>
                                     ))}
                                 </div>
-                                <p className="text-xs text-gray-400 mt-2">
+                                <p className="text-xs text-stone-500 mt-2">
                                     💡 이미지는 포트폴리오와 함께 저장됩니다
                                 </p>
                             </div>
                         )}
 
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="h-px bg-white/10 flex-1"></div>
-                            <span className="text-gray-500 text-xs">또는 텍스트 직접 입력</span>
-                            <div className="h-px bg-white/10 flex-1"></div>
+                            <div className="h-px bg-stone-200 flex-1"></div>
+                            <span className="text-stone-500 text-xs">또는 텍스트 직접 입력</span>
+                            <div className="h-px bg-stone-200 flex-1"></div>
                         </div>
 
                         {/* 텍스트 입력 */}
                         <div className="mb-4">
-                            <label className="block text-sm font-bold text-gray-300 mb-2">이력서 내용 붙여넣기</label>
+                            <label className="block text-sm font-bold text-stone-600 mb-2">이력서 내용 붙여넣기</label>
                             <textarea
-                                className="w-full h-48 p-4 bg-black/30 border border-white/10 rounded-xl text-gray-300 focus:border-emerald-500 focus:outline-none resize-none placeholder-gray-600 leading-relaxed"
+                                className="w-full h-48 p-4 bg-white border border-stone-200 rounded-xl text-stone-800 focus:border-emerald-500 focus:outline-none resize-none placeholder-stone-400 leading-relaxed"
                                 placeholder="이력서 내용을 여기에 붙여넣으세요..."
                                 value={resumeText}
                                 onChange={(e) => setResumeText(e.target.value)}
                             />
                             {resumeText && (
-                                <p className="text-xs text-emerald-400 mt-2">
+                                <p className="text-xs text-emerald-600 mt-2">
                                     ✓ {resumeText.length}자 입력됨
                                 </p>
                             )}

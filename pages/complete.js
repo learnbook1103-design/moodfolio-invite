@@ -23,9 +23,9 @@ export default function Complete({ answers, resetAnswers }) {
   };
 
   // 1. 저장 후 나가기
-  const handleSaveAndExit = () => { resetAnswers(); router.push('/'); };
+  const handleSaveAndExit = () => { resetAnswers(); router.push('/home'); };
   // 2. 저장 안 하고 나가기
-  const handleDiscardAndExit = () => { resetAnswers(); router.push('/'); };
+  const handleDiscardAndExit = () => { resetAnswers(); router.push('/home'); };
 
   // 3. 프로필 생성 및 첫 포트폴리오 자동 생성
   const handleSubmitToAI = async () => {

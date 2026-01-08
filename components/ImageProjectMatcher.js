@@ -97,14 +97,14 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                 <div className="flex justify-between items-center w-full">
                     <button
                         onClick={handleReset}
-                        className="px-4 py-2 text-emerald-400 hover:text-emerald-300 transition-colors text-sm"
+                        className="px-4 py-2 text-emerald-600 hover:text-emerald-700 transition-colors text-sm font-bold"
                     >
                         🔄 자동 매칭으로 초기화
                     </button>
                     <div className="flex gap-3">
                         <button
                             onClick={onCancel}
-                            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                            className="px-4 py-2 text-stone-500 hover:text-stone-700 transition-colors"
                         >
                             취소
                         </button>
@@ -119,21 +119,21 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
             }
         >
             <div className="p-1">
-                <h2 className="text-2xl font-bold text-emerald-400 mb-4 text-center">
+                <h2 className="text-2xl font-bold text-emerald-600 mb-4 text-center">
                     이미지-프로젝트 매칭
                 </h2>
 
-                <p className="text-sm text-gray-400 mb-6 text-center">
+                <p className="text-sm text-stone-500 mb-6 text-center">
                     이미지를 드래그하여 프로젝트에 할당하세요
                 </p>
 
                 {/* Unassigned Images Section */}
                 {unassignedImages.length > 0 && (
                     <div className="mb-6">
-                        <label className="block text-sm font-bold text-gray-300 mb-3">
+                        <label className="block text-sm font-bold text-stone-600 mb-3">
                             📷 할당되지 않은 이미지 ({unassignedImages.length}개)
                         </label>
-                        <div className="grid grid-cols-4 gap-3 p-3 bg-black/20 border border-white/10 rounded-xl">
+                        <div className="grid grid-cols-4 gap-3 p-3 bg-stone-50 border border-stone-200 rounded-xl">
                             {unassignedImages.map(({ img, idx }) => (
                                 <div
                                     key={idx}
@@ -144,9 +144,9 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                                     <img
                                         src={img}
                                         alt={`Image ${idx + 1}`}
-                                        className="w-full h-20 object-cover rounded-lg border-2 border-white/20 hover:border-emerald-500/50 transition-all"
+                                        className="w-full h-20 object-cover rounded-lg border-2 border-stone-200 hover:border-emerald-500 transition-all"
                                     />
-                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                                         <span className="text-white text-xs font-bold">드래그</span>
                                     </div>
                                 </div>
@@ -156,8 +156,8 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                 )}
 
                 {/* Projects Section */}
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                    <label className="block text-sm font-bold text-gray-300 mb-3">
+                <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+                    <label className="block text-sm font-bold text-stone-600 mb-3">
                         📋 프로젝트 목록
                     </label>
                     {projects.map((project, projectIdx) => (
@@ -165,16 +165,16 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                             key={projectIdx}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={() => handleDrop(projectIdx)}
-                            className="p-4 bg-black/30 border border-white/10 rounded-xl hover:border-emerald-500/30 transition-all"
+                            className="p-4 bg-white border border-stone-200 rounded-xl hover:border-emerald-400 transition-all shadow-sm"
                         >
                             <div className="flex items-center justify-between mb-3">
-                                <h3 className="text-sm font-bold text-white">
+                                <h3 className="text-sm font-bold text-stone-800">
                                     {project.title || `프로젝트 ${projectIdx + 1}`}
                                 </h3>
                                 {project.confidence < 1.0 && (
-                                    <span className={`text-xs px-2 py-1 rounded ${project.confidence >= 0.7 ? 'bg-emerald-500/20 text-emerald-400' :
-                                            project.confidence >= 0.5 ? 'bg-yellow-500/20 text-yellow-400' :
-                                                'bg-red-500/20 text-red-400'
+                                    <span className={`text-xs px-2 py-1 rounded font-bold ${project.confidence >= 0.7 ? 'bg-emerald-100 text-emerald-700' :
+                                        project.confidence >= 0.5 ? 'bg-amber-100 text-amber-700' :
+                                            'bg-red-100 text-red-700'
                                         }`}>
                                         자동 매칭 {Math.round(project.confidence * 100)}%
                                     </span>
@@ -182,7 +182,7 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                             </div>
 
                             {/* Drop Zone */}
-                            <div className="min-h-24 p-3 border-2 border-dashed border-white/20 rounded-lg bg-black/20">
+                            <div className="min-h-24 p-3 border-2 border-dashed border-stone-200 rounded-lg bg-stone-50">
                                 {assignments[projectIdx]?.length > 0 ? (
                                     <div className="grid grid-cols-3 gap-2">
                                         {assignments[projectIdx].map((imgIdx) => (
@@ -190,11 +190,11 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                                                 <img
                                                     src={allImages[imgIdx]}
                                                     alt={`Project ${projectIdx + 1} Image`}
-                                                    className="w-full h-16 object-cover rounded border border-emerald-500/50"
+                                                    className="w-full h-16 object-cover rounded border border-emerald-400"
                                                 />
                                                 <button
                                                     onClick={() => handleRemoveImage(projectIdx, imgIdx)}
-                                                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-md"
                                                 >
                                                     ✕
                                                 </button>
@@ -202,7 +202,7 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="h-full flex items-center justify-center text-gray-500 text-xs">
+                                    <div className="h-full flex items-center justify-center text-stone-400 text-xs">
                                         이미지를 여기에 드롭하세요
                                     </div>
                                 )}
@@ -211,7 +211,7 @@ export default function ImageProjectMatcher({ projects, allImages, onConfirm, on
                     ))}
                 </div>
 
-                <p className="text-xs text-gray-500 mt-4 text-center">
+                <p className="text-xs text-stone-400 mt-4 text-center">
                     💡 이미지를 드래그하여 프로젝트에 할당하거나 제거할 수 있습니다
                 </p>
             </div>

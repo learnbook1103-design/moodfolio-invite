@@ -60,7 +60,7 @@ export default function BackgroundElements({ animate = true, showGround = true }
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4, duration: 2.5, ease: "easeInOut" }}
-                        className="fixed bottom-[-10%] w-full h-[30%] z-20 pointer-events-none"
+                        className="fixed bottom-[-10%] w-full h-[30%] z-0 pointer-events-none"
                     >
                         <GroundFront />
                     </motion.div>
@@ -99,7 +99,7 @@ export default function BackgroundElements({ animate = true, showGround = true }
 
             {/* Ground */}
             {showGround && (
-                <div className="fixed bottom-[-10%] w-full h-[30%] z-20 pointer-events-none">
+                <div className="fixed bottom-[-10%] w-full h-[30%] z-0 pointer-events-none">
                     <GroundFront />
                 </div>
             )}

@@ -24,10 +24,10 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     return (
-        <div className="bg-slate-900/90 border border-white/20 rounded-xl p-6 backdrop-blur-xl shadow-2xl">
+        <div className="bg-white border border-stone-200 rounded-xl p-6 shadow-sm">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">프로필 완성도</h3>
+                <h3 className="text-lg font-bold text-stone-800">프로필 완성도</h3>
                 {percentage >= 90 && (
                     <span className="text-2xl animate-bounce">{level.icon}</span>
                 )}
@@ -46,7 +46,7 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
                             stroke="currentColor"
                             strokeWidth="8"
                             fill="none"
-                            className="text-white/10"
+                            className="text-stone-200"
                         />
                         {/* Progress circle */}
                         <circle
@@ -71,7 +71,7 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
                     </svg>
                     {/* Percentage text */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-2xl font-bold text-white">{percentage}%</span>
+                        <span className="text-2xl font-bold text-stone-800">{percentage}%</span>
                     </div>
                 </div>
 
@@ -81,26 +81,26 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
                         <span className="text-lg">{level.icon}</span>
                         <span className={`text-sm font-bold ${level.color}`}>{level.label}</span>
                     </div>
-                    <p className="text-sm text-slate-300 leading-relaxed">{level.message}</p>
+                    <p className="text-sm text-stone-500 leading-relaxed">{level.message}</p>
                 </div>
             </div>
 
             {/* Next Steps */}
             {nextSteps.length > 0 && (
                 <div className="space-y-3">
-                    <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wide">다음 단계</h4>
+                    <h4 className="text-sm font-bold text-stone-500 uppercase tracking-wide">다음 단계</h4>
                     <div className="space-y-2">
                         {nextSteps.map((step, index) => (
                             <div
                                 key={step.field}
                                 onClick={() => onFieldClick && onFieldClick(step.field)}
-                                className="flex items-center gap-3 p-3 bg-slate-800/80 border border-white/20 rounded-lg hover:bg-slate-700/80 transition-colors cursor-pointer group"
+                                className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg hover:bg-stone-100 transition-colors cursor-pointer group"
                             >
                                 <div className={`w-6 h-6 rounded-full ${level.bg} ${level.border} border flex items-center justify-center flex-shrink-0`}>
                                     <span className={`text-xs font-bold ${level.color}`}>{index + 1}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-white truncate">{step.label}</p>
+                                    <p className="text-sm font-medium text-stone-700 truncate">{step.label}</p>
                                 </div>
                                 <div className={`text-xs font-bold ${level.color} flex-shrink-0`}>
                                     +{step.weight}%
@@ -115,7 +115,7 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
             {completeness.missing.length > 3 && (
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 w-full text-center text-sm text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-2"
+                    className="mt-4 w-full text-center text-sm text-stone-400 hover:text-stone-600 transition-colors flex items-center justify-center gap-2"
                 >
                     <span>{isExpanded ? '간단히 보기' : `${completeness.missing.length - 3}개 더 보기`}</span>
                     <span className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>▼</span>
@@ -124,18 +124,18 @@ export default function ProfileCompleteness({ userData, onFieldClick }) {
 
             {/* Expanded View */}
             {isExpanded && (
-                <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
+                <div className="mt-4 space-y-2 border-t border-stone-200 pt-4">
                     {completeness.missing.slice(3).map((step, index) => (
                         <div
                             key={step.field}
                             onClick={() => onFieldClick && onFieldClick(step.field)}
-                            className="flex items-center gap-3 p-3 bg-slate-800/80 border border-white/20 rounded-lg hover:bg-slate-700/80 transition-colors cursor-pointer"
+                            className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
                         >
                             <div className={`w-6 h-6 rounded-full ${level.bg} ${level.border} border flex items-center justify-center flex-shrink-0`}>
                                 <span className={`text-xs font-bold ${level.color}`}>{index + 4}</span>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-white truncate">{step.label}</p>
+                                <p className="text-sm font-medium text-stone-700 truncate">{step.label}</p>
                             </div>
                             <div className={`text-xs font-bold ${level.color} flex-shrink-0`}>
                                 +{step.weight}%

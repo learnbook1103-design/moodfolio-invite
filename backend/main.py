@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import re
 import requests
@@ -89,6 +89,13 @@ class PortfolioUpdate(BaseModel):
 
 class ChatAnswerGenerationRequest(BaseModel):
     portfolio_context: str
+
+# --- LLM 초기화 (모든 엔드포인트에서 사용) ---
+llm = ChatGoogleGenerativeAI(
+    model="gemini-flash-latest",
+    temperature=0.7,
+    google_api_key=GOOGLE_API_KEY
+)
 
 # --- [API] AI 채팅 답변 생성 ---
 @app.post("/generate-chat-answers")
@@ -335,11 +342,6 @@ def naver_login(data: NaverToken, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="네이버 로그인 실패")
 
 # --- [API 6] AI 포트폴리오 생성 ---
-llm = ChatGoogleGenerativeAI(
-    model="gemini-flash-latest",
-    temperature=0.7,
-    google_api_key=GOOGLE_API_KEY
-)
 
 portfolio_prompt = ChatPromptTemplate.from_messages([
     ("system", """
@@ -360,6 +362,7 @@ portfolio_chain = portfolio_prompt | llm
 @app.post("/submit")
 def submit_data(data: UserAnswers):
     print("📢 [생성 요청] AI 작업 시작...")
+    log_ai_usage(prompt_type="auto_generate")
     answers = data.answers
     projects_str = ""
     
@@ -442,6 +445,10 @@ def chat_bot(request: ChatRequest):
             
             context_str = request.portfolio_context if request.portfolio_context else "아직 입력된 포트폴리오 정보가 없습니다."
             chat_chain = popo_prompt | llm
+            
+            # Log usage
+            log_ai_usage(prompt_type="popo")
+            
             response = chat_chain.invoke({
                 "input": request.message,
                 "context": f"현재 포트폴리오 정보: {context_str}"
@@ -468,6 +475,10 @@ def chat_bot(request: ChatRequest):
             
             context_str = request.portfolio_context if request.portfolio_context else "포트폴리오 정보가 제공되지 않았습니다."
             chat_chain = mumu_prompt | llm
+            
+            # Log usage
+            log_ai_usage(prompt_type="mumu")
+            
             response = chat_chain.invoke({
                 "input": request.message,
                 "context": f"사용자 상세 데이터: {context_str}"
@@ -481,3 +492,82 @@ def chat_bot(request: ChatRequest):
         import traceback
         traceback.print_exc()
         return {"reply": "죄송합니다. 응답 생성 중 오류가 발생했습니다."}
+# ==================== ADMIN API (SUPABASE) ====================
+from admin_apis import (
+    get_admin_stats as admin_stats_handler,
+    get_all_users as admin_users_handler,
+    delete_user as admin_delete_user_handler,
+    get_all_portfolios as admin_portfolios_handler
+)
+from admin_auth import verify_admin
+
+@app.get('/admin/stats')
+def admin_stats_route(admin_email: str = Depends(verify_admin)):
+    return admin_stats_handler(admin_email)
+
+@app.get('/admin/users')
+def admin_users_route(skip: int = 0, limit: int = 50, search: str = None, admin_email: str = Depends(verify_admin)):
+    return admin_users_handler(skip, limit, search, admin_email)
+
+@app.delete('/admin/users/{user_id}')
+def admin_delete_user_route(user_id: str, admin_email: str = Depends(verify_admin)):
+    return admin_delete_user_handler(user_id, admin_email)
+
+@app.get('/admin/portfolios')
+def admin_portfolios_route(skip: int = 0, limit: int = 50, search: str = None, admin_email: str = Depends(verify_admin)):
+    return admin_portfolios_handler(skip, limit, search, admin_email)
+
+from admin_apis import batch_delete_users as admin_batch_delete_users_handler
+from pydantic import BaseModel
+
+class BatchDeleteRequest(BaseModel):
+    user_ids: list[str]
+
+@app.post('/admin/users/batch-delete')
+def admin_batch_delete_users_route(request: BatchDeleteRequest, admin_email: str = Depends(verify_admin)):
+    return admin_batch_delete_users_handler(request.user_ids, admin_email)
+
+
+# --- 새로운 관리 기능 (Notices, AI Stats, Template Config) ---
+from admin_apis import (
+    get_notices, get_active_notices, create_notice, update_notice, delete_notice,
+    NoticeCreate, NoticeUpdate,
+    get_ai_stats,
+    get_template_configs, update_template_config, TemplateConfigUpdate,
+    log_ai_usage
+)
+
+# 1. 공지사항 라우트
+@app.get('/api/notices/active')
+def get_active_notices_route():
+    return get_active_notices()
+
+@app.get('/admin/notices')
+def admin_get_notices(skip: int = 0, limit: int = 20, admin_email: str = Depends(verify_admin)):
+    return get_notices(skip, limit, admin_email)
+
+@app.post('/admin/notices')
+def admin_create_notice(notice: NoticeCreate, admin_email: str = Depends(verify_admin)):
+    return create_notice(notice, admin_email)
+
+@app.put('/admin/notices/{notice_id}')
+def admin_update_notice(notice_id: str, notice: NoticeUpdate, admin_email: str = Depends(verify_admin)):
+    return update_notice(notice_id, notice, admin_email)
+
+@app.delete('/admin/notices/{notice_id}')
+def admin_delete_notice(notice_id: str, admin_email: str = Depends(verify_admin)):
+    return delete_notice(notice_id, admin_email)
+
+# 2. AI 통계 라우트
+@app.get('/admin/stats/ai')
+def admin_get_ai_stats(period: str = 'daily', admin_email: str = Depends(verify_admin)):
+    return get_ai_stats(period, admin_email)
+
+# 3. 템플릿 설정 라우트
+@app.get('/admin/templates/config')
+def admin_get_template_configs(admin_email: str = Depends(verify_admin)):
+    return get_template_configs(admin_email)
+
+@app.put('/admin/templates/config/{key}')
+def admin_update_template_config(key: str, config: TemplateConfigUpdate, admin_email: str = Depends(verify_admin)):
+    return update_template_config(key, config, admin_email)

@@ -602,7 +602,7 @@ function SignupForm({ onComplete }) {
           </div>        </div>
       </div>
       <button onClick={handleSignup} disabled={!isAllRequiredChecked} className={`w-full mt-6 py-4 rounded-xl font-bold text-lg transition-all transform active:scale-95 ${isAllRequiredChecked ? 'bg-linear-to-r from-emerald-400 to-blue-500 text-black shadow-[0_0_20px_rgba(52,211,153,0.4)]' : 'bg-gray-700/50 text-gray-500 cursor-not-allowed border border-white/5'}`}>이메일로 회원가입</button>
-      <div className="text-center mt-6"><Link href="/" className="text-sm text-gray-400 hover:text-white underline transition-colors underline-offset-4">메인으로 돌아가기</Link></div>
+      <div className="text-center mt-6"><Link href="/home" className="text-sm text-gray-400 hover:text-white underline transition-colors underline-offset-4">메인으로 돌아가기</Link></div>
 
       <Modal isOpen={!!modalContent} onClose={closeModal}>
         {modalContent && (

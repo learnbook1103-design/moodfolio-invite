@@ -85,9 +85,9 @@ export default function PortfolioPreviewCard({ portfolio, userProfile, onView, o
             className="relative group"
         >
             {/* Card Container */}
-            <div className="relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all">
+            <div className="relative bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
                 {/* Preview Area - iframe or Fallback */}
-                <div className="relative h-48 bg-gray-900 overflow-hidden z-0">
+                <div className="relative h-48 bg-stone-100 overflow-hidden z-0">
                     {/* Loading State */}
                     {isLoading && (
                         <div className={`absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
@@ -152,18 +152,18 @@ export default function PortfolioPreviewCard({ portfolio, userProfile, onView, o
                 <div className="p-5 space-y-4 relative z-10">
                     {/* Portfolio Name */}
                     <div>
-                        <h3 className="text-xl font-bold text-white mb-2 truncate flex items-center gap-2">
+                        <h3 className="text-xl font-bold text-stone-800 mb-2 truncate flex items-center gap-2">
                             <span>{jobIcon}</span>
                             <span>{portfolio.name}</span>
                         </h3>
 
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2">
-                            <span className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-300">
+                            <span className="px-2 py-1 bg-stone-100 border border-stone-200 rounded text-xs text-stone-500">
                                 {strengthLabels[portfolio.strength] || portfolio.strength}
                             </span>
                             {portfolio.moods?.slice(0, 2).map((m, i) => (
-                                <span key={i} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-300">
+                                <span key={i} className="px-2 py-1 bg-stone-100 border border-stone-200 rounded text-xs text-stone-500">
                                     {m}
                                 </span>
                             ))}
@@ -174,27 +174,27 @@ export default function PortfolioPreviewCard({ portfolio, userProfile, onView, o
                     <div className="flex gap-2">
                         <button
                             onClick={() => onView(portfolio.id)}
-                            className={`flex-1 py-2.5 bg-gradient-to-r ${accent} text-white font-bold rounded-lg hover:shadow-lg hover:shadow-${accent}/50 transition-all text-sm`}
+                            className={`flex-1 py-2.5 bg-gradient-to-r ${accent} text-white font-bold rounded-lg hover:shadow-lg transition-all text-sm`}
                         >
                             보기
                         </button>
                         <button
                             onClick={handleShareClick}
-                            className="px-4 py-2.5 bg-cyan-600/60 border border-cyan-500/30 text-white rounded-lg hover:bg-cyan-600/80 transition-all"
+                            className="px-4 py-2.5 bg-white border border-cyan-200 text-cyan-600 rounded-lg hover:bg-cyan-50 transition-all font-bold"
                             title="공유하기"
                         >
                             🔗
                         </button>
                         <button
                             onClick={() => onRename(portfolio.id)}
-                            className="px-4 py-2.5 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 transition-all"
+                            className="px-4 py-2.5 bg-white border border-stone-200 text-stone-600 rounded-lg hover:bg-stone-50 transition-all font-bold"
                             title="이름 변경"
                         >
                             ✎
                         </button>
                         <button
                             onClick={() => onDelete(portfolio.id)}
-                            className="px-4 py-2.5 bg-red-600/60 border border-red-500/30 text-white rounded-lg hover:bg-red-600/80 transition-all"
+                            className="px-4 py-2.5 bg-white border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-all font-bold"
                             title="삭제"
                         >
                             🗑
@@ -210,7 +210,7 @@ export default function PortfolioPreviewCard({ portfolio, userProfile, onView, o
                 )}
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                <div className="absolute inset-0 bg-stone-900/0 opacity-0 group-hover:bg-stone-900/0 transition-opacity pointer-events-none"></div>
             </div>
         </motion.div>
     );

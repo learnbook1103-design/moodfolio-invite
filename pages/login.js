@@ -29,8 +29,8 @@ export default function Login() {
         // Check if user has profile
         const profile = await getUserProfile(user.id);
         if (profile && profile.name) {
-          // Existing user with profile -> My Page
-          router.push('/mypage');
+          // Existing user with profile -> Home (Dashboard)
+          router.push('/home');
         } else {
           // New user without profile -> Onboarding
           router.push('/onboarding');
@@ -97,7 +97,7 @@ export default function Login() {
       localStorage.removeItem('portfolio_data');
     }
 
-    router.push('/result');
+    router.push('/home');
   };
 
   // --- 네이버 로그인 로직 (팝업) ---
@@ -162,15 +162,22 @@ export default function Login() {
 
       if (error) {
         // Handle specific error cases
-        if (error.message.includes('Invalid login credentials')) {
+        const errorMsg = (error.message || '').toLowerCase();
+        if (errorMsg.includes('invalid') || errorMsg.includes('credentials')) {
           alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+          setIsLoading(false);
           return;
         }
-        if (error.message.includes('Email not confirmed')) {
+        if (errorMsg.includes('email not confirmed') || errorMsg.includes('confirmation')) {
           alert("이메일 인증이 필요합니다.\n이메일을 확인해주세요.");
+          setIsLoading(false);
           return;
         }
-        throw error;
+
+        // Generic error
+        alert("로그인에 실패했습니다.\n" + error.message);
+        setIsLoading(false);
+        return;
       }
 
       if (user && session) {
@@ -237,7 +244,7 @@ export default function Login() {
         if (profile && profile.name) {
           // Existing user with profile
           alert(`환영합니다, ${profile.name}님!`);
-          router.push('/mypage');
+          router.push('/home'); // Redirect to Dashboard
         } else {
           // New user without profile
           alert(`환영합니다!\n\n포트폴리오를 만들어보세요.`);

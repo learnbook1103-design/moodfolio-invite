@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Script from 'next/script';
 import Head from 'next/head';
 import { preparePortfolioRAG, hasValidPortfolioData } from '../lib/portfolioRAG';
+import { loadGuestPortfolio } from '../lib/guestStore';
 
 // [추가 1] 폰트 설정을 위해 import
 import { Gowun_Batang } from 'next/font/google';
@@ -80,6 +81,50 @@ export default function App({ Component, pageProps }) {
         }
 
         if (!user) {
+          // [GUEST LOGIC] Load from SessionStorage or IndexedDB
+          let guestPortfolio = null;
+          const guestData = typeof window !== 'undefined' ? sessionStorage.getItem('guest_portfolio') : null;
+
+          if (guestData) {
+            try {
+              guestPortfolio = JSON.parse(guestData);
+            } catch (e) {
+              console.warn('Failed to parse guestData', e);
+            }
+          }
+
+          if (!guestPortfolio && currentPortfolioId && currentPortfolioId.startsWith('guest_')) {
+            try {
+              guestPortfolio = await loadGuestPortfolio(currentPortfolioId);
+            } catch (e) {
+              console.error('Failed to load from guestStore', e);
+            }
+          }
+
+          if (guestPortfolio) {
+            const profile = guestPortfolio.profile || {};
+            const mergedData = {
+              ...profile,
+              job: guestPortfolio.job,
+              strength: guestPortfolio.strength,
+              moods: guestPortfolio.moods,
+              bgm: guestPortfolio.bgm
+            };
+
+            // Projects
+            const featuredIds = guestPortfolio.featured_project_ids || [];
+            if (featuredIds.length > 0 && profile.projects && Array.isArray(profile.projects)) {
+              mergedData.projects = featuredIds.map(id => profile.projects[id]).filter(p => p);
+            } else if (profile.projects && Array.isArray(profile.projects)) {
+              mergedData.projects = profile.projects.slice(0, 6);
+            } else {
+              mergedData.projects = [];
+            }
+
+            setCurrentUserData(mergedData);
+            return;
+          }
+
           setCurrentUserData(null);
           return;
         }
@@ -208,6 +253,7 @@ export default function App({ Component, pageProps }) {
             handleChange={handleChange}
             resetAnswers={resetAnswers}
             triggerChatbot={triggerChatbot}
+            setGlobalUserData={setCurrentUserData}
           />
         </ErrorBoundary>
 
