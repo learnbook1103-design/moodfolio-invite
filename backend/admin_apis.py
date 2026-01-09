@@ -269,8 +269,8 @@ def get_ai_stats(period: str = 'daily', admin_email: str = Depends(verify_admin)
 class TemplateConfigUpdate(BaseModel):
     is_active: bool
 
-def get_template_configs(admin_email: str = Depends(verify_admin)):
-    """템플릿 설정 조회"""
+def get_template_configs(admin_email: str = None):
+    """템플릿 설정 조회 (공개 접근 가능)"""
     try:
         response = admin_client.table('template_config').select('*').execute()
         # 딕셔너리 형태로 변환하여 반환 { 'key': boolean }

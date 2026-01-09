@@ -1,13 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { JOB_SPECS } from '../lib/jobData';
 
 const TemplateSelectionModal = ({ isOpen, onClose, onSelectTemplate, userJob }) => {
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [templateConfig, setTemplateConfig] = useState({});
+    const [isLoadingConfig, setIsLoadingConfig] = useState(true);
 
-    // Get all templates from all job categories
-    const allTemplates = Object.values(JOB_SPECS).flatMap(jobSpec => jobSpec.strengths);
+    // Fetch template configuration from backend
+    useEffect(() => {
+        const fetchTemplateConfig = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                const response = await fetch(`${apiUrl}/api/templates/config`);
+                if (response.ok) {
+                    const config = await response.json();
+                    setTemplateConfig(config);
+                } else {
+                    // If fetch fails, assume all templates are active
+                    setTemplateConfig({});
+                }
+            } catch (error) {
+                console.error('Failed to fetch template config:', error);
+                // On error, assume all templates are active
+                setTemplateConfig({});
+            } finally {
+                setIsLoadingConfig(false);
+            }
+        };
+
+        if (isOpen) {
+            fetchTemplateConfig();
+        }
+    }, [isOpen]);
+
+    // Template ID to config key mapping
+    const getConfigKey = (templateId) => {
+        const mapping = {
+            // Developer
+            'tech': 'developer_typeA',
+            'impl': 'developer_typeB',
+            'problem': 'developer_typeC',
+            // Designer
+            'visual': 'designer_typeA',
+            'brand': 'designer_typeB',
+            'ux': 'designer_typeC',
+            // Marketer
+            'data': 'marketer_typeA',
+            'creative': 'marketer_typeB',
+            'strategy': 'marketer_typeC',
+            // Service (Planner)
+            'revenue': 'service_typeA',
+            'ops': 'service_typeB',
+            'comm': 'service_typeC',
+        };
+        return mapping[templateId] || null;
+    };
+
+    // Get all templates from all job categories and filter by activation status
+    const allTemplates = Object.values(JOB_SPECS)
+        .flatMap(jobSpec => jobSpec.strengths)
+        .filter(template => {
+            const configKey = getConfigKey(template.id);
+            if (!configKey) return true; // If no mapping, show template
+            // Show template if config is not false (undefined or true means active)
+            return templateConfig[configKey] !== false;
+        });
 
     const handleSelect = async (template) => {
         setSelectedTemplate(template.id);

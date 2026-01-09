@@ -22,8 +22,50 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
 # 1. 환경 설정
-load_dotenv()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+from pathlib import Path
+
+# .env 파일에서 직접 읽기 (load_dotenv 대신)
+env_path = Path(__file__).parent / '.env'
+GOOGLE_API_KEY = None
+
+if env_path.exists():
+    try:
+        # utf-8-sig handles BOM automatically
+        with open(env_path, 'r', encoding='utf-8-sig') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                if '=' in line:
+                    key, value = line.split('=', 1)
+                    key = key.strip()
+                    value = value.strip()
+                    if key == 'GOOGLE_API_KEY':
+                        GOOGLE_API_KEY = value
+                        print(f"✅ GOOGLE_API_KEY loaded successfully: {GOOGLE_API_KEY[:10]}...")
+                        break
+    except Exception as e:
+        print(f"⚠️ Error reading .env file: {e}")
+
+if not GOOGLE_API_KEY:
+    print(f"❌ GOOGLE_API_KEY not found in {env_path}")
+    print(f"❌ File exists: {env_path.exists()}")
+    if env_path.exists():
+        print("❌ File contents (first 5 lines):")
+        try:
+            with open(env_path, 'r', encoding='utf-8-sig') as f:
+                for i, line in enumerate(f):
+                    if i < 5:
+                        print(f"  Line {i+1}: {line.strip()[:50]}...")
+        except:
+            pass
+    # Fallback: check os.environ just in case
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    if GOOGLE_API_KEY:
+         print(f"✅ GOOGLE_API_KEY loaded from environment variable: {GOOGLE_API_KEY[:10]}...")
+
+if not GOOGLE_API_KEY:
+    raise ValueError(f"GOOGLE_API_KEY not found in {env_path} or environment variables")
 
 app = FastAPI()
 
@@ -563,10 +605,17 @@ def admin_delete_notice(notice_id: str, admin_email: str = Depends(verify_admin)
 def admin_get_ai_stats(period: str = 'daily', admin_email: str = Depends(verify_admin)):
     return get_ai_stats(period, admin_email)
 
+
 # 3. 템플릿 설정 라우트
+# Public endpoint for reading template config (no auth required)
+@app.get('/api/templates/config')
+def public_get_template_configs():
+    return get_template_configs(admin_email=None)
+
+# Admin endpoint for reading template config (auth required)
 @app.get('/admin/templates/config')
 def admin_get_template_configs(admin_email: str = Depends(verify_admin)):
-    return get_template_configs(admin_email)
+    return get_template_configs(admin_email=admin_email)
 
 @app.put('/admin/templates/config/{key}')
 def admin_update_template_config(key: str, config: TemplateConfigUpdate, admin_email: str = Depends(verify_admin)):

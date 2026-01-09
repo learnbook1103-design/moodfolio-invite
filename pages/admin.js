@@ -226,9 +226,13 @@ export default function AdminPage() {
     };
 
     const toggleTemplate = async (key, currentStatus) => {
+        console.log('🔄 Toggle template:', key, 'Current:', currentStatus);
         try {
             const newStatus = !currentStatus;
-            await fetch(`${apiUrl}/admin/templates/config/${key}`, {
+            console.log('📤 Sending request to:', `${apiUrl}/admin/templates/config/${key}`);
+            console.log('📤 New status:', newStatus);
+
+            const response = await fetch(`${apiUrl}/admin/templates/config/${key}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${userEmail}`,
@@ -236,9 +240,24 @@ export default function AdminPage() {
                 },
                 body: JSON.stringify({ is_active: newStatus })
             });
-            loadTemplateConfig();
+
+            console.log('📥 Response status:', response.status);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ API Error:', response.status, errorText);
+                alert(`설정 저장 실패: ${response.status} - ${errorText}`);
+                return;
+            }
+
+            const result = await response.json();
+            console.log('✅ Toggle success:', result);
+
+            // Reload template config to update UI
+            await loadTemplateConfig();
         } catch (error) {
-            alert('설정 저장 실패');
+            console.error('❌ Toggle error:', error);
+            alert(`설정 저장 실패: ${error.message}`);
         }
     };
 
@@ -380,7 +399,7 @@ export default function AdminPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                         >
-                            <h2 className="text-3xl font-bold text-white mb-8">대시보드</h2>
+                            <h2 className="text-3xl font-bold text-white mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">대시보드</h2>
 
                             {loading ? (
                                 <div className="text-white">로딩 중...</div>
@@ -413,7 +432,7 @@ export default function AdminPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                         >
-                            <h2 className="text-3xl font-bold text-white mb-8">사용자 관리</h2>
+                            <h2 className="text-3xl font-bold text-white mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">사용자 관리</h2>
 
                             <div className="mb-6 flex justify-between items-center gap-4">
                                 <input
@@ -494,7 +513,7 @@ export default function AdminPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                         >
-                            <h2 className="text-3xl font-bold text-white mb-8">포트폴리오 관리</h2>
+                            <h2 className="text-3xl font-bold text-white mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">포트폴리오 관리</h2>
 
                             <div className="mb-6">
                                 <input
@@ -539,7 +558,7 @@ export default function AdminPage() {
                     {/* --- 공지사항 탭 --- */}
                     {activeTab === 'notices' && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white mb-6">공지사항 관리</h2>
+                            <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">공지사항 관리</h2>
 
                             {/* 공지사항 등록 폼 */}
                             <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-8">
@@ -609,7 +628,7 @@ export default function AdminPage() {
                     {/* --- AI 통계 탭 --- */}
                     {activeTab === 'ai' && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white mb-6">AI 사용량 통계 (최근 1000건 기준)</h2>
+                            <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">AI 사용량 통계 (최근 1000건 기준)</h2>
                             {aiStats ? (
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <StatsCard title="총 요청 수" value={aiStats.total_requests} icon="🤖" color="blue" />
@@ -640,7 +659,7 @@ export default function AdminPage() {
                     {/* --- 템플릿 관리 탭 --- */}
                     {activeTab === 'templates' && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white mb-6">템플릿 활성/비활성 관리</h2>
+                            <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">템플릿 활성/비활성 관리</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {[
                                     // Developer
